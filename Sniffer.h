@@ -11,4 +11,6 @@ public:
     Sniffer(char *filePath);
     void parseFile();
     ~Sniffer();
+
+    short getTotalMsgLength(char header[]);
 };

@@ -16,7 +16,8 @@ void Sniffer::parseFile(){
     const int maxMsgLength = 65535;
     const short headerLength = 20;
     const int maxReadDataLength = maxMsgLength - headerLength;
-    short totalMsgLength = 0;   //longitud total del msj que se esta leyendo
+    short totalMsgLength;       //longitud total del msj que se esta leyendo
+    short msgLength;
     short identificador = 0;
     short flags = 0;
     short offset = 0;
@@ -29,12 +30,13 @@ void Sniffer::parseFile(){
 
     /* leo primeros header */
     file.read(buffer, headerLength);
-    /* read other two bytes, which are total msg length */
-    totalMsgLength |= buffer[2];
-    totalMsgLength = totalMsgLength << 8;
-    totalMsgLength |= buffer[3];
+    /* get total msg length */
+    totalMsgLength = getTotalMsgLength(buffer);
+//    totalMsgLength |= buffer[2];
+//    totalMsgLength = totalMsgLength << 8;
+//    totalMsgLength |= buffer[3];
 
-    short msgLength = totalMsgLength - headerLength;
+    msgLength = totalMsgLength - headerLength;
 
     std::cout<<"msg read: "<<buffer<<std::endl;
     std::cout<<"Total msg length "<<totalMsgLength<<std::endl;
@@ -95,4 +97,12 @@ void Sniffer::parseFile(){
 
 Sniffer::~Sniffer(){
     file.close();
+}
+
+short Sniffer::getTotalMsgLength(char *header) {
+    short totalMsgLength = 0;
+    totalMsgLength |= header[2];
+    totalMsgLength = totalMsgLength << 8;
+    totalMsgLength |= header[3];
+    return totalMsgLength;
 }
