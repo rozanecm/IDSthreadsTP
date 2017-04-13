@@ -6,7 +6,9 @@
 #endif //PROYECTO_SNIFFER_H
 class Sniffer{
 private:
-    std::fstream file;
+    std::ifstream file;
 public:
     Sniffer(char *filePath);
+    void parseFile();
+    ~Sniffer();
 };
