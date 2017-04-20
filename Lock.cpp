@@ -1,5 +1,9 @@
-//
-// Created by rozanecm on 4/20/17.
-//
-
 #include "Lock.h"
+
+Lock::Lock(std::mutex &m) : m(m){
+    m.lock();
+}
+
+Lock::~Lock() {
+    m.unlock();
+}

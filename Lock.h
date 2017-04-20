@@ -2,8 +2,16 @@
 #define PROYECTO_LOCK_H
 
 
+#include <mutex>
+
 class Lock {
 private:
+    std::mutex &m;
+
+public:
+    Lock(std::mutex  &m);
+
+    ~Lock();
 };
 
 
