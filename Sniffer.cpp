@@ -1,71 +1,122 @@
 #include <iostream>
 #include "Sniffer.h"
+//#include "IPPacket.h"
+#include <string>
 
 Sniffer::Sniffer(char *filePath){
     file.open(filePath, std::ifstream::binary);
     file.seekg(0);
 
+    //TODO check file opening
     /* check if file was opened correctly */
-    if(!file.is_open()){
-        std::cout<<"Error opnening file\n";
-    }
-    std::cout<<"File successfully opened\n";
+//    if (!file.is_open()){
+//        std::cout<<"Error opnening file\n";
+//    }
+//    std::cout<<"File successfully opened\n";
 }
 
-void Sniffer::parseFile(){
-    const int maxMsgLength = 65535;
-    const short headerLength = 20;
-    const int maxReadDataLength = maxMsgLength - headerLength;
-    short totalMsgLength;       //longitud total del msj que se esta leyendo
-    short msgLength;
-    short identificador = 0;
-    short flags = 0;
-    short offset = 0;
-    int direccionOrigen = 0;
-    int direccionDestino = 0;
-    std::string readMsg;
+IPPacket Sniffer::parseFile() {
+    const unsigned int maxMsgLength = 65535;
+    const unsigned short headerLength = 20;
+    const unsigned int maxReadDataLength = maxMsgLength - headerLength;
+    unsigned short totalPacketLength;          //longitud total
+                                                // del msj que se esta leyendo
+    unsigned short msgLength;
+    unsigned short identificador;
+    unsigned short flags;
+    unsigned short offset;
+    unsigned int direccionOrigen;
+    unsigned int direccionDestino;
+
 
     /* buffer donde se guarda el header leido */
-    char buffer[headerLength];
+    unsigned char buffer[headerLength];
 
     /* leo primeros header */
-    file.read(buffer, headerLength);
+    file.read((char *) buffer, headerLength);
     /* get total msg length */
-    totalMsgLength = getTotalMsgLength(buffer);
-//    totalMsgLength |= buffer[2];
-//    totalMsgLength = totalMsgLength << 8;
-//    totalMsgLength |= buffer[3];
+    totalPacketLength = getTotalMsgLength(buffer);
 
-    msgLength = totalMsgLength - headerLength;
+    msgLength = totalPacketLength - headerLength;
 
-    std::cout<<"msg read: "<<buffer<<std::endl;
-    std::cout<<"Total msg length "<<totalMsgLength<<std::endl;
-    std::cout<<"msg length "<<msgLength<<std::endl;
+//    std::cout<<"Total msg length "<<totalPacketLength<<std::endl;
+//    std::cout<<"msg length "<<msgLength<<std::endl;
 
     /* next two bytes are the identificador */
-    identificador |= buffer[4];
-    identificador = identificador << 8;
-    identificador |= buffer[5];
+    identificador = getIdentificador(buffer);
 
-    std::cout<<"identificador: "<<identificador<<std::endl;
+//    std::cout<<"identificador: "<<identificador<<std::endl;
 
     /* next two bytes correspond to: flags(3 bits); offset(13 bits) */
     /* we're interested in the 3rd bit of the flags part */
-    flags |= buffer[6];
-    flags = flags >> 1;
-    std::cout<<"flags: "<<flags<<std::endl;
-    //TODO quedara verificar si es par o impar (si es impar el ultimo bit es 1)
+    flags = getFlags(buffer);
+//    std::cout<<"flags: "<<flags<<std::endl;
 //    std::cout<<"sizeof(short): "<<sizeof(short)<<std::endl;
-    offset |= buffer[6];
-    offset = offset << 8;
-    offset |= buffer[7];
-    offset = offset << (sizeof(short) * 8 - 5);
-    offset = offset >> (sizeof(short) * 8 - 5);
-    std::cout<<"offset: "<<offset<<std::endl;
+    offset = getOffset(buffer);
+//    std::cout<<"offset: "<<offset<<std::endl;
 
     /* ignore next four bytes */
 
     /* next 4 bytes are direccoin origen*/
+    direccionOrigen = getDireccionOrigen(buffer);
+//    std::cout<<"dir origen: "<<direccionOrigen<<std::endl;
+
+    /* next 4 bytes are direccoin origen*/
+    direccionDestino = getDireccionDestino(buffer);
+//    std::cout<<"dir origen: "<<direccionDestino<<std::endl;
+
+    /* buffer donde se guarda el msj leido */
+    char msgBuffer[maxReadDataLength] = "a";
+    /* leo msj */
+    file.read(msgBuffer, msgLength);
+    std::string readMsg(msgBuffer, msgLength);
+//    std::cout<<"Read msg: "<<readMsg<<std::endl;
+
+    return IPPacket(totalPacketLength, msgLength, identificador, flags, offset,
+                    direccionOrigen, direccionDestino, readMsg);
+}
+
+Sniffer::~Sniffer(){
+    file.close();
+}
+
+unsigned short Sniffer::getTotalMsgLength(unsigned char *header) {
+    unsigned short totalMsgLength = 0;
+    totalMsgLength |= header[2];
+    totalMsgLength = totalMsgLength << 8;
+    totalMsgLength |= header[3];
+    return totalMsgLength;
+}
+
+unsigned short Sniffer::getIdentificador(unsigned char *buffer) {
+    unsigned short identificador = 0;
+    identificador |= buffer[4];
+    identificador = identificador << 8;
+    identificador |= buffer[5];
+    return identificador;
+}
+
+unsigned short Sniffer::getFlags(unsigned char *buffer) {
+    unsigned short flags = 0;
+    flags |= buffer[6];
+    flags = flags >> 5;
+    return flags;
+}
+
+unsigned short Sniffer::getOffset(unsigned char *buffer) {
+    unsigned short offset = 0;
+    offset |= buffer[6];
+    offset = offset << 8;
+    offset |= buffer[7];
+    offset = offset << 3;
+    offset = offset >> 3;
+//    offset = offset << (sizeof(short) * 8 - 5);
+//    offset = offset >> (sizeof(short) * 8 - 5);
+    return offset;
+}
+
+unsigned int Sniffer::getDireccionOrigen(unsigned char *buffer) {
+    unsigned int direccionOrigen = 0;
     direccionOrigen |= buffer[12];
     direccionOrigen = direccionOrigen << 8;
     direccionOrigen |= buffer[13];
@@ -73,9 +124,11 @@ void Sniffer::parseFile(){
     direccionOrigen |= buffer[14];
     direccionOrigen = direccionOrigen << 8;
     direccionOrigen |= buffer[15];
-    std::cout<<"dir origen: "<<direccionOrigen<<std::endl;
+    return direccionOrigen;
+}
 
-    /* next 4 bytes are direccoin origen*/
+unsigned int Sniffer::getDireccionDestino(unsigned char *buffer) {
+    unsigned int direccionDestino = 0;
     direccionDestino |= buffer[16];
     direccionDestino = direccionDestino << 8;
     direccionDestino |= buffer[17];
@@ -83,26 +136,9 @@ void Sniffer::parseFile(){
     direccionDestino |= buffer[18];
     direccionDestino = direccionDestino << 8;
     direccionDestino |= buffer[19];
-    std::cout<<"dir origen: "<<direccionDestino<<std::endl;
-
-    /* buffer donde se guarda el msj leido */
-    char msgBuffer[maxReadDataLength];
-    /* leo msj */
-    file.read(msgBuffer, msgLength);
-    msgBuffer[msgLength] = '\0';
-    readMsg = msgBuffer;
-
-    std::cout<<"Read msg: "<<readMsg<<std::endl;
+    return direccionDestino;
 }
 
-Sniffer::~Sniffer(){
-    file.close();
-}
-
-short Sniffer::getTotalMsgLength(char *header) {
-    short totalMsgLength = 0;
-    totalMsgLength |= header[2];
-    totalMsgLength = totalMsgLength << 8;
-    totalMsgLength |= header[3];
-    return totalMsgLength;
+bool Sniffer::isEOF(){
+    return file.peek() == EOF;
 }
