@@ -14,8 +14,6 @@ public:
     void join();
 
     virtual void run() = 0;
-
-    virtual ~Thread();
 };
 
 
