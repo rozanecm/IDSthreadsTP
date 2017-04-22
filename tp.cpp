@@ -4,6 +4,9 @@
 //#include "IPPacket.h"
 #include "ThreatDetector.h"
 #include "Assembler.h"
+#include "ThreatDetectorMonitor.h"
+
+void setOfRules(char *rulesPath, std::vector<Rule> &rules);
 
 int main(int argc, char *argv[]) {
     /* chequeo cant. de parametros: debe haber al menos 3
@@ -12,26 +15,66 @@ int main(int argc, char *argv[]) {
     if (argc < 3){
         return 1;
     }
-    ThreatDetector threatDetector(argv[1]);
+    std::vector<Rule> rules;
+    setOfRules(argv[1], rules);
+    ThreatDetector threatDetector(&rules);
+    ThreatDetectorMonitor threatDetectorMonitor(threatDetector);
+
     Assembler assembler = Assembler();
     for (int i = 2; i < argc; i++){
         Sniffer unSniffer(argv[i]);
         while (!unSniffer.isEOF()) {
             IPPacket currentPacket = unSniffer.parseFile();
             if (currentPacket.isOneFragmetPacket()){
-                threatDetector.addIPPacket(currentPacket);
-                threatDetector.checkForNewThreats();
-                threatDetector.removeIPPacket(currentPacket);
+                threatDetectorMonitor.addIPPacket(currentPacket);
+                threatDetectorMonitor.checkForNewThreats();
+                threatDetectorMonitor.removeIPPacket(currentPacket);
             }else{
                 assembler.addPacket(currentPacket);
                 if (assembler.fragmentsCompleteWholeMessage(&currentPacket)){
-                    threatDetector.addIPPacket(
+                    threatDetectorMonitor.addIPPacket(
                             assembler.getWholePacketFor(currentPacket));
-                    threatDetector.checkForNewThreats();
-                    threatDetector.removeIPPacket(currentPacket);
+                    threatDetectorMonitor.checkForNewThreats();
+                    threatDetectorMonitor.removeIPPacket(currentPacket);
                 }
             }
         }
     }
     return 0;
+}
+
+void setOfRules(char *rulesPath, std::vector<Rule> &rules) {
+    std::ifstream rulesFile;
+    try {
+        rulesFile.open(rulesPath);
+    }catch (std::ios_base::failure e){
+        std::cout<<"Error opnening error file"<<std::endl;
+    }
+    rulesFile.seekg(0);
+    unsigned short numOfRulesProcessed = 0;
+    while (!rulesFile.eof()) {
+        std::vector<std::string> forbiddenWords;
+        unsigned int src, dst, threshold;
+        std::string keyword;
+        rulesFile>>std::hex>>src>>std::hex>>dst>>std::hex>>threshold>>keyword;
+        if (rulesFile.eof()){
+            break;
+        }
+        //TEST OUT
+//        std::cout<<src<<" "<<dst<<" "<<threshold<<" "<<keyword<<::std::endl;
+        std::string aux;
+        rulesFile>>aux;
+        while (aux != ";"){
+            if (keyword != "always") {
+                //TEST OUT
+//            std::cout<<aux<<std::endl;
+                forbiddenWords.push_back(aux);
+                rulesFile >> aux;
+            }
+        }
+        rules.push_back(Rule(numOfRulesProcessed, src, dst,
+                             threshold, keyword, forbiddenWords));
+        numOfRulesProcessed++;
+    }
+    rulesFile.close();
 }

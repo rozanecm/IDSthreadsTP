@@ -8,13 +8,22 @@
 #include "Rule.h"
 
 class ThreatDetector {
-    std::ifstream rulesFile;
+//    std::ifstream rulesFile;
 
     std::vector<IPPacket> packetContainer;
 
-    std::vector<Rule> rules;
+    std::vector<Rule> *rules;
 public:
-    explicit ThreatDetector(char *rulesPath);
+    explicit ThreatDetector(std::vector<Rule> *rules);
+
+//    ThreatDetector
+
+//    ThreatDetector(const std::vector<IPPacket> packetContainer,
+//                   const std::vector<Rule> &rules);
+
+    ThreatDetector operator=(const ThreatDetector& threatDetector);
+
+    ThreatDetector(const ThreatDetector& threatDetector);
 
     void addIPPacket(IPPacket packet);
 
