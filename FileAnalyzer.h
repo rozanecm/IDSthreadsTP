@@ -2,7 +2,7 @@
 #define PROYECTO_FILEANALYZER_H
 
 
-class FileAnalyzer {
+class FileAnalyzer : public Thread{
 
 };
 
