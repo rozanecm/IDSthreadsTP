@@ -5,6 +5,7 @@
 #include "ThreatDetector.h"
 #include "Assembler.h"
 #include "ThreatDetectorMonitor.h"
+#include "AssemblerMonitor.h"
 
 void setOfRules(char *rulesPath, std::vector<Rule> &rules);
 
@@ -21,6 +22,7 @@ int main(int argc, char *argv[]) {
     ThreatDetectorMonitor threatDetectorMonitor(threatDetector);
 
     Assembler assembler = Assembler();
+    AssemblerMonitor assemblerMonitor(assembler);
     for (int i = 2; i < argc; i++){
         Sniffer unSniffer(argv[i]);
         while (!unSniffer.isEOF()) {
@@ -30,10 +32,10 @@ int main(int argc, char *argv[]) {
                 threatDetectorMonitor.checkForNewThreats();
                 threatDetectorMonitor.removeIPPacket(currentPacket);
             }else{
-                assembler.addPacket(currentPacket);
-                if (assembler.fragmentsCompleteWholeMessage(&currentPacket)){
+                assemblerMonitor.addPacket(currentPacket);
+                if (assemblerMonitor.fragmentsCompleteWholeMessage(&currentPacket)){
                     threatDetectorMonitor.addIPPacket(
-                            assembler.getWholePacketFor(currentPacket));
+                            assemblerMonitor.getWholePacketFor(currentPacket));
                     threatDetectorMonitor.checkForNewThreats();
                     threatDetectorMonitor.removeIPPacket(currentPacket);
                 }
