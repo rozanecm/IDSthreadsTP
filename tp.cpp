@@ -1,12 +1,13 @@
 //#include <iostream>
 //#include <vector>
-#include "Sniffer.h"
+//#include "Sniffer.h"
 //#include "IPPacket.h"
 #include "ThreatDetector.h"
 #include "Assembler.h"
 #include "ThreatDetectorMonitor.h"
 #include "AssemblerMonitor.h"
 #include "Thread.h"
+#include "FileAnalyzer.h"
 
 void setOfRules(char *rulesPath, std::vector<Rule> &rules);
 
@@ -26,25 +27,19 @@ int main(int argc, char *argv[]) {
     AssemblerMonitor assemblerMonitor(assembler);
 
     std::vector<Thread*> threads;
-    
+
     for (int i = 2; i < argc; i++){
-        Sniffer unSniffer(argv[i]);
-        while (!unSniffer.isEOF()) {
-            IPPacket currentPacket = unSniffer.parseFile();
-            if (currentPacket.isOneFragmetPacket()){
-                threatDetectorMonitor.addIPPacket(currentPacket);
-                threatDetectorMonitor.checkForNewThreats();
-                threatDetectorMonitor.removeIPPacket(currentPacket);
-            }else{
-                assemblerMonitor.addPacket(currentPacket);
-                if (assemblerMonitor.fragmentsCompleteWholeMessage(&currentPacket)){
-                    threatDetectorMonitor.addIPPacket(
-                            assemblerMonitor.getWholePacketFor(currentPacket));
-                    threatDetectorMonitor.checkForNewThreats();
-                    threatDetectorMonitor.removeIPPacket(currentPacket);
-                }
-            }
-        }
+        threads.push_back(new FileAnalyzer(argv[i], threatDetectorMonitor,
+                                           assemblerMonitor));
+    }
+
+    for (unsigned int i = 0; i < threads.size(); i++){
+        threads.at(i)->start();
+    }
+
+    for (unsigned int i = 0; i < threads.size(); i++){
+        threads.at(i)->join();
+        delete threads.at(i);
     }
     return 0;
 }
