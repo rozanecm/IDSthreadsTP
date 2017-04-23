@@ -1,0 +1,10 @@
+#ifndef PROYECTO_ASSEMBLERMONITOR_H
+#define PROYECTO_ASSEMBLERMONITOR_H
+
+
+class AssemblerMonitor {
+    
+};
+
+
+#endif //PROYECTO_ASSEMBLERMONITOR_H
