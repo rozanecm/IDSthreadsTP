@@ -2,8 +2,18 @@
 #define PROYECTO_THREAD_H
 
 
-class Thread {
+#include <thread>
 
+class Thread {
+private:
+    std::thread thread;
+
+public:
+    void start();
+
+    void join();
+
+    virtual void run() = 0;
 };
 
 
