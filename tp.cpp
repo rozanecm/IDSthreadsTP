@@ -6,6 +6,7 @@
 #include "Assembler.h"
 #include "ThreatDetectorMonitor.h"
 #include "AssemblerMonitor.h"
+#include "Thread.h"
 
 void setOfRules(char *rulesPath, std::vector<Rule> &rules);
 
@@ -23,6 +24,9 @@ int main(int argc, char *argv[]) {
 
     Assembler assembler = Assembler();
     AssemblerMonitor assemblerMonitor(assembler);
+
+    std::vector<Thread*> threads;
+    
     for (int i = 2; i < argc; i++){
         Sniffer unSniffer(argv[i]);
         while (!unSniffer.isEOF()) {
