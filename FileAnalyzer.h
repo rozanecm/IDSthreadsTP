@@ -3,7 +3,11 @@
 
 
 class FileAnalyzer : public Thread{
+    Sniffer unSniffer;
 
+    ThreatDetectorMonitor &threatDetectorMonitor;
+
+    AssemblerMonitor &assemblerMonitor;
 };
 
 
