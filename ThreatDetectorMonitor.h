@@ -14,7 +14,7 @@ private:
     ThreatDetector &threatDetector;
 
 public:
-    ThreatDetectorMonitor(ThreatDetector threatDetector1);
+    ThreatDetectorMonitor(ThreatDetector &threatDetector1);
 
     void addIPPacket(IPPacket packet);
 

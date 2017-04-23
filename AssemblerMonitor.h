@@ -12,7 +12,7 @@ private:
     Assembler &assembler;
 
 public:
-    AssemblerMonitor (Assembler assembler1);
+    AssemblerMonitor (Assembler &assembler1);
 
     void addPacket(IPPacket packet);
 

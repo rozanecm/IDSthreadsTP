@@ -1,7 +1,7 @@
 #include "ThreatDetectorMonitor.h"
 #include "Lock.h"
 
-ThreatDetectorMonitor::ThreatDetectorMonitor(ThreatDetector threatDetector1) :
+ThreatDetectorMonitor::ThreatDetectorMonitor(ThreatDetector &threatDetector1) :
         threatDetector(threatDetector1){}
 
 void ThreatDetectorMonitor::addIPPacket(IPPacket packet) {

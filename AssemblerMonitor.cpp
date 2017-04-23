@@ -1,7 +1,7 @@
 #include "AssemblerMonitor.h"
 #include "Lock.h"
 
-AssemblerMonitor::AssemblerMonitor(Assembler assembler1) :
+AssemblerMonitor::AssemblerMonitor(Assembler &assembler1) :
         assembler(assembler1){}
 
 void AssemblerMonitor::addPacket(IPPacket packet) {
