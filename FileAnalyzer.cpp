@@ -2,12 +2,12 @@
 
 FileAnalyzer::FileAnalyzer(char *filepath,
                            ThreatDetectorMonitor &threatDetectorMonitor1,
-                           AssemblerMonitor assemblerMonitor1)
+                           AssemblerMonitor &assemblerMonitor1)
         : unSniffer(Sniffer(filepath)),
           threatDetectorMonitor(threatDetectorMonitor1),
           assemblerMonitor(assemblerMonitor1){}
 
-void FileAnalyzer::run() {
+void FileAnalyzer::run(){
     while (!unSniffer.isEOF()) {
         IPPacket currentPacket = unSniffer.parseFile();
         if (currentPacket.isOneFragmetPacket()){

@@ -17,7 +17,7 @@ class FileAnalyzer : public Thread{
 public:
     FileAnalyzer(char* filepath,
                  ThreatDetectorMonitor &threatDetectorMonitor1,
-                 AssemblerMonitor assemblerMonitor1);
+                 AssemblerMonitor &assemblerMonitor1);
 
     virtual void run();
 };
