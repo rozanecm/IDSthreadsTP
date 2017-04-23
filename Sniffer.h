@@ -24,6 +24,8 @@ private:
 public:
     explicit Sniffer(char *filePath);
 
+    explicit Sniffer(Sniffer&& other);
+
     IPPacket parseFile();
 
     bool isEOF();

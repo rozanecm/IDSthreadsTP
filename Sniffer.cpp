@@ -15,6 +15,10 @@ Sniffer::Sniffer(char *filePath){
 //    std::cout<<"File successfully opened\n";
 }
 
+Sniffer::Sniffer(Sniffer &&other) {
+    this->file = std::move(other.file);
+}
+
 IPPacket Sniffer::parseFile() {
     const unsigned int maxMsgLength = 65535;
     const unsigned short headerLength = 20;
