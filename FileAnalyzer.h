@@ -20,6 +20,8 @@ public:
                  AssemblerMonitor &assemblerMonitor1);
 
     virtual void run();
+
+    virtual ~FileAnalyzer();
 };
 
 

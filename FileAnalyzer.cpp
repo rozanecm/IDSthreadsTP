@@ -25,3 +25,5 @@ void FileAnalyzer::run(){
         }
     }
 }
+
+FileAnalyzer::~FileAnalyzer() {}
