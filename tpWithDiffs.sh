@@ -1,3 +1,5 @@
+printf "deleting old *.o files\n"
+find . -maxdepth 1 -type f -iname \*.o -delete
 echo make
 make -f Makefile
 ./tp tests/00_parametros
