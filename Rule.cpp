@@ -4,7 +4,8 @@
 
 Rule::Rule(unsigned short ruleNumber, unsigned int src,
            unsigned int dst, unsigned int threshold,
-           std::string keyword, const std::vector<std::string> &forbiddenWords) :
+           std::string keyword,
+           const std::vector<std::string> &forbiddenWords) :
         ruleNumber(ruleNumber), src(src), dst(dst), threshold(threshold),
         keyword(keyword), forbiddenWords(forbiddenWords),
         numberOfTimesTheRuleWasApplied(0){}

@@ -17,7 +17,8 @@ void FileAnalyzer::run(){
         }else{
             assemblerMonitor.addPacket(currentPacket);
             if (assemblerMonitor.fragmentsCompleteWholeMessage(&currentPacket)){
-                IPPacket wholePacket = assemblerMonitor.getWholePacketFor(currentPacket);
+                IPPacket wholePacket =
+                        assemblerMonitor.getWholePacketFor(currentPacket);
                 threatDetectorMonitor.addIPPacket(wholePacket);
                 threatDetectorMonitor.checkForNewThreats();
                 threatDetectorMonitor.removeIPPacket(currentPacket);
