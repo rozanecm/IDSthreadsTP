@@ -6,38 +6,33 @@
 IPPacket::IPPacket(unsigned short totalPacketLength, unsigned short msgLength,
                    unsigned short identificador, unsigned short flags,
                    unsigned short offset, unsigned int direccionOrigen,
-                   unsigned int direccionDestino, std::string msg) {
-    this->totalPacketLength = totalPacketLength;
-    this->msgLength = msgLength;
-    this->identificador = identificador;
-    this->flags = flags;
-    this->offset = offset;
-    this->direccionOrigen = direccionOrigen;
-    this->direccionDestino = direccionDestino;
-    this->msg = msg;
-}
+                   unsigned int direccionDestino, const std::string &msg) :
+        totalPacketLength(totalPacketLength), msgLength(msgLength),
+        identificador(identificador), flags(flags), offset(offset),
+        direccionOrigen(direccionOrigen), direccionDestino(direccionDestino),
+        msg(msg){}
 
-bool IPPacket::isSource(unsigned int src) {
+bool IPPacket::isSource(unsigned int src) const {
     return this->direccionOrigen == src;
 }
 
-bool IPPacket::isDestination(unsigned int dst) {
+bool IPPacket::isDestination(unsigned int dst) const {
     return this->direccionDestino == dst;
 }
 
-bool IPPacket::isWordPresent(std::string word) {
+bool IPPacket::isWordPresent(std::string word) const{
     return (this->msg.find(word) != std::string::npos);
 }
 
-std::string IPPacket::getMsg() {
+std::string IPPacket::getMsg() const {
     return this->msg;
 }
 
-unsigned int IPPacket::getSrc() {
+unsigned int IPPacket::getSrc() const {
     return this->direccionOrigen;
 }
 
-unsigned int IPPacket::getDest() {
+unsigned int IPPacket::getDest() const {
     return this->direccionDestino;
 }
 
@@ -48,10 +43,6 @@ bool IPPacket::isOneFragmetPacket() {
      * */
     return (this->flags % 2 == 0 && this->offset == 0);
 }
-
-//bool IPPacket::isTerminatingPacket() {
-//    return (this->flags % 2 == 0 && this->offset > 0);
-//}
 
 void IPPacket::orderVectorOfPacketsByOffset(
         std::vector<IPPacket> *packetsVector) {
@@ -106,21 +97,14 @@ IPPacket IPPacket::getMessageFromFragments(
 }
 
 IPPacket::IPPacket(unsigned short identificador, unsigned int origen,
-                   unsigned int destino, std::string msg) {
-    this->identificador = identificador;
-    this->direccionOrigen = origen;
-    this->direccionDestino = destino;
-    this->msg = msg;
-}
+                   unsigned int destino, std::string msg) :
+        identificador(identificador), direccionOrigen(origen),
+        direccionDestino(destino), msg(msg){}
 
 
 bool IPPacket::operator == (const IPPacket &packet) const {
     return (
-//            this->totalPacketLength == packet.totalPacketLength
-//            && this->msgLength == packet.msgLength
             this->identificador == packet.identificador
-//            && this->flags == packet.flags
-//            && this->offset == packet.offset
             && this->direccionOrigen == packet.direccionOrigen
             && this->direccionDestino == packet.direccionDestino
             && this->msg == packet.msg);

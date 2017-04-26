@@ -26,25 +26,23 @@ private:
 
 public:
     IPPacket(unsigned short totalPacketLength, unsigned short msgLength,
-                 unsigned short identificador, unsigned short flags,
-                 unsigned short offset, unsigned int direccionOrigen,
-                 unsigned int direccionDestino, std::string msg);
+             unsigned short identificador, unsigned short flags,
+             unsigned short offset, unsigned int direccionOrigen,
+             unsigned int direccionDestino, const std::string &msg);
 
-    bool isSource(unsigned int src);
+    bool isSource(unsigned int src) const;
 
-    bool isDestination(unsigned int dst);
+    bool isDestination(unsigned int dst) const;
 
-    bool isWordPresent(std::string);
+    bool isWordPresent(std::string) const;
 
-    unsigned int getSrc();
+    unsigned int getSrc() const;
 
-    unsigned int getDest();
+    unsigned int getDest() const;
 
-    std::string getMsg();
+    std::string getMsg() const;
 
     bool isOneFragmetPacket();
-
-//    bool isTerminatingPacket();
 
     static void orderVectorOfPacketsByOffset(std::vector<IPPacket>
                                              *packetsVector);

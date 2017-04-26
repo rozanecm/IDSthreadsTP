@@ -14,13 +14,13 @@ private:
     ThreatDetector &threatDetector;
 
 public:
-    ThreatDetectorMonitor(ThreatDetector &threatDetector1);
+    explicit ThreatDetectorMonitor(ThreatDetector &threatDetector1);
 
-    void addIPPacket(IPPacket packet);
+    void addIPPacket(IPPacket &packet);
 
     void checkForNewThreats();
 
-    void removeIPPacket(IPPacket packet);
+    void removeIPPacket(IPPacket &packet);
 };
 
 

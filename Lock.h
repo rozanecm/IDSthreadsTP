@@ -9,7 +9,7 @@ private:
     std::mutex &m;
 
 public:
-    Lock(std::mutex  &m);
+    explicit Lock(std::mutex  &m);
 
     ~Lock();
 };

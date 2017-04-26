@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-void ThreatDetector::addIPPacket(IPPacket packet) {
+void ThreatDetector::addIPPacket(IPPacket &packet) {
         this->packetContainer.push_back(packet);
 }
 
@@ -21,7 +21,7 @@ void ThreatDetector::checkForNewThreats() {
     }
 }
 
-void ThreatDetector::removeIPPacket(IPPacket packet) {
+void ThreatDetector::removeIPPacket(IPPacket &packet) {
     for (unsigned int i = 0; i < packetContainer.size(); i++){
         IPPacket currentPacket = packetContainer.at(i);
         if (currentPacket == packet){
@@ -33,13 +33,7 @@ void ThreatDetector::removeIPPacket(IPPacket packet) {
 ThreatDetector::ThreatDetector(const ThreatDetector &threatDetector) {
     this->packetContainer = threatDetector.packetContainer;
     this->rules = threatDetector.rules;
-//    ThreatDetector threatDetector1 = threatDetector;
 }
-//
-//ThreatDetector::ThreatDetector(const std::vector<IPPacket> packetContainer,
-//                               const std::vector<Rule> &rules) {
-//    this->rules = std::move(rules);
-//}
 
 ThreatDetector ThreatDetector::operator=(const ThreatDetector &threatDetector) {
     packetContainer = threatDetector.packetContainer;

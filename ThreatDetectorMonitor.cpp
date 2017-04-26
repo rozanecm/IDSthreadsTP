@@ -4,7 +4,7 @@
 ThreatDetectorMonitor::ThreatDetectorMonitor(ThreatDetector &threatDetector1) :
         threatDetector(threatDetector1){}
 
-void ThreatDetectorMonitor::addIPPacket(IPPacket packet) {
+void ThreatDetectorMonitor::addIPPacket(IPPacket &packet) {
     Lock l(m);
     threatDetector.addIPPacket(packet);
 }
@@ -14,7 +14,7 @@ void ThreatDetectorMonitor::checkForNewThreats() {
     threatDetector.checkForNewThreats();
 }
 
-void ThreatDetectorMonitor::removeIPPacket(IPPacket packet) {
+void ThreatDetectorMonitor::removeIPPacket(IPPacket &packet) {
     Lock l(m);
     threatDetector.removeIPPacket(packet);
 }

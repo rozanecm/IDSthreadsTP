@@ -1,13 +1,14 @@
-//#include <iostream>
-//#include <vector>
-//#include "Sniffer.h"
-//#include "IPPacket.h"
 #include "ThreatDetector.h"
 #include "Assembler.h"
 #include "ThreatDetectorMonitor.h"
 #include "AssemblerMonitor.h"
 #include "Thread.h"
 #include "FileAnalyzer.h"
+#include <string>
+#include <vector>
+
+#define RETURNERROR 1
+#define EXPECTEDRETURN 0
 
 void setOfRules(char *rulesPath, std::vector<Rule> &rules);
 
@@ -16,7 +17,7 @@ int main(int argc, char *argv[]) {
      * (nombre del programa, reglas, y al menos una captura
      * */
     if (argc < 3){
-        return 1;
+        return RETURNERROR;
     }
     std::vector<Rule> rules;
     setOfRules(argv[1], rules);
@@ -41,16 +42,12 @@ int main(int argc, char *argv[]) {
         threads.at(i)->join();
         delete threads.at(i);
     }
-    return 0;
+    return EXPECTEDRETURN;
 }
 
 void setOfRules(char *rulesPath, std::vector<Rule> &rules) {
     std::ifstream rulesFile;
-    try {
-        rulesFile.open(rulesPath);
-    }catch (std::ios_base::failure e){
-        std::cout<<"Error opnening error file"<<std::endl;
-    }
+    rulesFile.open(rulesPath);
     rulesFile.seekg(0);
     unsigned short numOfRulesProcessed = 0;
     while (!rulesFile.eof()) {
@@ -61,14 +58,11 @@ void setOfRules(char *rulesPath, std::vector<Rule> &rules) {
         if (rulesFile.eof()){
             break;
         }
-        //TEST OUT
-//        std::cout<<src<<" "<<dst<<" "<<threshold<<" "<<keyword<<::std::endl;
+
         std::string aux;
         rulesFile>>aux;
         while (aux != ";"){
             if (keyword != "always") {
-                //TEST OUT
-//            std::cout<<aux<<std::endl;
                 forbiddenWords.push_back(aux);
                 rulesFile >> aux;
             }

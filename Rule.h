@@ -17,24 +17,24 @@ private:
 
     unsigned int numberOfTimesTheRuleWasApplied;
 
-    bool direccionDestinoSospechosa(IPPacket &packet);
+    bool direccionDestinoSospechosa(const IPPacket &packet);
 
-    bool direccionOrigenSospechosa(IPPacket &packet);
+    bool direccionOrigenSospechosa(const IPPacket &packet);
 
 public:
     Rule(unsigned short ruleNumber, unsigned int src,
          unsigned int dst, unsigned int threshold,
-         std::string keyword, std::vector <std::string> forbiddenWords);
+         std::string keyword, const std::vector<std::string> &forbiddenWords);
 
-    bool analyzePacket(IPPacket &packet);
+    bool analyzePacket(const IPPacket &packet);
 
-    bool areAllTheWordsPresent(IPPacket &packet);
+    bool areAllTheWordsPresent(const IPPacket &packet);
 
-    bool isAnyOfTheWordsPresent(IPPacket &packet);
+    bool isAnyOfTheWordsPresent(const IPPacket &packet);
 
     bool hasBeenViolated();
 
-    void printViolationMsg(IPPacket &packet);
+    void printViolationMsg(const IPPacket &packet);
 };
 
 
