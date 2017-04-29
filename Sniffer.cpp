@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Sniffer.h"
+#include "Lock.h"
 //#include "IPPacket.h"
 #include <string>
 
@@ -8,6 +9,7 @@ Sniffer::Sniffer(char *filePath){
 
     /* check if file was opened correctly */
     if (!file.is_open()){
+        Lock l(m);
         std::cout<<"Error opnening file\n";
     }
 

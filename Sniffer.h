@@ -1,4 +1,5 @@
 #include <fstream>
+#include <mutex>
 #include "IPPacket.h"
 
 #ifndef PROYECTO_SNIFFER_H
@@ -7,6 +8,8 @@
 #endif //PROYECTO_SNIFFER_H
 class Sniffer{
 private:
+    std::mutex m;
+
     std::ifstream file;
 
     unsigned short getTotalMsgLength(unsigned char *header);
