@@ -22,6 +22,6 @@ set(SOURCE_FILES
         ThreatDetector.h
         ThreatDetectorMonitor.cpp
     ThreatDetectorMonitor.h
-    tp.cpp)
+    tp.cpp RuleParser.cpp RuleParser.h)
 
 add_executable(Proyecto ${SOURCE_FILES})
