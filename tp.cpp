@@ -4,6 +4,7 @@
 #include "AssemblerMonitor.h"
 #include "Thread.h"
 #include "FileAnalyzer.h"
+#include "RuleParser.h"
 #include <string>
 #include <vector>
 
@@ -19,8 +20,11 @@ int main(int argc, char *argv[]) {
     if (argc < 3){
         return RETURNERROR;
     }
+
     std::vector<Rule> rules;
-    setOfRules(argv[1], rules);
+    RuleParser ruleParser;
+    ruleParser.parseRulesFromFile(argv[1], rules);
+
     ThreatDetector threatDetector(&rules);
     ThreatDetectorMonitor threatDetectorMonitor(threatDetector);
 
@@ -43,33 +47,4 @@ int main(int argc, char *argv[]) {
         delete threads.at(i);
     }
     return EXPECTEDRETURN;
-}
-
-void setOfRules(char *rulesPath, std::vector<Rule> &rules) {
-    std::ifstream rulesFile;
-    rulesFile.open(rulesPath);
-    rulesFile.seekg(0);
-    unsigned short numOfRulesProcessed = 0;
-    while (!rulesFile.eof()) {
-        std::vector<std::string> forbiddenWords;
-        unsigned int src, dst, threshold;
-        std::string keyword;
-        rulesFile>>std::hex>>src>>std::hex>>dst>>std::hex>>threshold>>keyword;
-        if (rulesFile.eof()){
-            break;
-        }
-
-        std::string aux;
-        rulesFile>>aux;
-        while (aux != ";"){
-            if (keyword != "always") {
-                forbiddenWords.push_back(aux);
-                rulesFile >> aux;
-            }
-        }
-        rules.push_back(Rule(numOfRulesProcessed, src, dst,
-                             threshold, keyword, forbiddenWords));
-        numOfRulesProcessed++;
-    }
-    rulesFile.close();
 }
