@@ -64,6 +64,7 @@ IPPacket Sniffer::parseFile() {
     char msgBuffer[maxReadDataLength] = "a";
     /* leo msj */
     if (msgLength > maxReadDataLength){
+        Lock l(m);
         std::cout<<"Error reading file\n";
     }
     file.read(msgBuffer, msgLength);
