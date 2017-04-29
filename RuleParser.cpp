@@ -1,5 +1,7 @@
 #include <fstream>
 #include "RuleParser.h"
+#include <string>
+#include <vector>
 
 void RuleParser::parseRulesFromFile(char *filePath, std::vector<Rule> &rules) {
     std::ifstream rulesFile;
