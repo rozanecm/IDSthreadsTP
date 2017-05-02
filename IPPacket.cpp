@@ -48,7 +48,6 @@ void IPPacket::orderVectorOfPacketsByOffset(
         std::vector<IPPacket> *packetsVector) {
     std::sort(packetsVector->begin(), packetsVector->end(),
               packetOrderCriteria);
-    //todo ver bien funcion de condicion de ordenamiento
 }
 
 bool IPPacket::packetOrderCriteria(IPPacket a, IPPacket b){
