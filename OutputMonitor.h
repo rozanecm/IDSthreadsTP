@@ -3,6 +3,7 @@
 
 
 #include <mutex>
+#include <string>
 
 class OutputMonitor {
 private:
