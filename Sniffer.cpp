@@ -1,22 +1,24 @@
 #include <iostream>
 #include "Sniffer.h"
 #include "Lock.h"
-//#include "IPPacket.h"
 #include <string>
+#include "OutputMonitor.h"
 
-Sniffer::Sniffer(char *filePath){
+Sniffer::Sniffer(char *filePath, OutputMonitor &outputMonitor1) :
+        outputMonitor(outputMonitor1){
     file.open(filePath, std::ifstream::binary);
 
     /* check if file was opened correctly */
     if (!file.is_open()){
-        Lock l(m);
-        std::cout<<"Error opnening file\n";
+        outputMonitor.cout("Error opnening file\n");
+//        Lock l(m);
+//        std::cout<<"Error opnening file\n";
     }
 
     file.seekg(0);
 }
 
-Sniffer::Sniffer(Sniffer &&other) {
+Sniffer::Sniffer(Sniffer &&other) : outputMonitor(outputMonitor) {
     this->file = std::move(other.file);
 }
 
@@ -25,7 +27,7 @@ IPPacket Sniffer::parseFile() {
 #define headerLength 20
 #define maxReadDataLength maxMsgLength - headerLength
     unsigned short totalPacketLength;          //longitud total
-                                                // del msj que se esta leyendo
+                                               // del msj que se esta leyendo
     unsigned short msgLength;
     unsigned short identificador;
     unsigned short flags;
@@ -64,8 +66,9 @@ IPPacket Sniffer::parseFile() {
     char msgBuffer[maxReadDataLength] = "a";
     /* leo msj */
     if (msgLength > maxReadDataLength){
-        Lock l(m);
-        std::cout<<"Error reading file\n";
+        outputMonitor.cout("Error Error reading file\n");
+//        Lock l(m);
+//        std::cout<<"Error reading file\n";
     }
     file.read(msgBuffer, msgLength);
     std::string readMsg(msgBuffer, msgLength);

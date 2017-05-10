@@ -1,6 +1,7 @@
 #include <fstream>
 #include <mutex>
 #include "IPPacket.h"
+#include "OutputMonitor.h"
 
 #ifndef PROYECTO_SNIFFER_H
 #define PROYECTO_SNIFFER_H
@@ -24,8 +25,9 @@ private:
 
     unsigned int getDireccionDestino(unsigned char *buffer);
 
+    OutputMonitor &outputMonitor;
 public:
-    explicit Sniffer(char *filePath);
+    explicit Sniffer(char *filePath, OutputMonitor &outputMonitor1);
 
     explicit Sniffer(Sniffer&& other);
 

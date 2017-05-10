@@ -1,9 +1,9 @@
 #include "FileAnalyzer.h"
 
-FileAnalyzer::FileAnalyzer(char *filepath,
+FileAnalyzer::FileAnalyzer(char *filepath, OutputMonitor &outputMonitor1,
                            ThreatDetectorMonitor &threatDetectorMonitor1,
                            AssemblerMonitor &assemblerMonitor1)
-        : unSniffer(Sniffer(filepath)),
+        : unSniffer(Sniffer(filepath, outputMonitor1)),
           threatDetectorMonitor(threatDetectorMonitor1),
           assemblerMonitor(assemblerMonitor1){}
 

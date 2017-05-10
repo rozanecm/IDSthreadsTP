@@ -5,6 +5,7 @@
 #include "Thread.h"
 #include "FileAnalyzer.h"
 #include "RuleParser.h"
+#include "OutputMonitor.h"
 #include <string>
 #include <vector>
 
@@ -21,6 +22,9 @@ int main(int argc, char *argv[]) {
         return RETURNERROR;
     }
 
+    /* create output Monitor to avoid race conditions during outputs */
+    OutputMonitor outputMonitor;
+
     std::vector<Rule> rules;
     RuleParser ruleParser;
     ruleParser.parseRulesFromFile(argv[1], rules);
@@ -34,8 +38,9 @@ int main(int argc, char *argv[]) {
     std::vector<Thread*> threads;
 
     for (int i = 2; i < argc; i++){
-        threads.push_back(new FileAnalyzer(argv[i], threatDetectorMonitor,
-                                           assemblerMonitor));
+        threads.push_back(
+                new FileAnalyzer(argv[i], outputMonitor, threatDetectorMonitor,
+                                 assemblerMonitor));
     }
 
     for (unsigned int i = 0; i < threads.size(); i++){
