@@ -20,7 +20,7 @@ bool Rule::direccionOrigenSospechosa(const IPPacket &packet) {
 
 bool Rule::analyzePacket(const IPPacket &packet){
     /* wanted to implemet with switch, but since it's not supported in c++
-     * I go with an if. Not so nice tough
+     * I go with an if. Not so nice though
      * */
     if (direccionOrigenSospechosa(packet) &&
             direccionDestinoSospechosa(packet)){
