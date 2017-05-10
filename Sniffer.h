@@ -26,6 +26,7 @@ private:
     unsigned int getDireccionDestino(unsigned char *buffer);
 
     OutputMonitor &outputMonitor;
+    
 public:
     explicit Sniffer(char *filePath, OutputMonitor &outputMonitor1);
 
