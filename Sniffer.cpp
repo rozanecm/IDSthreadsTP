@@ -4,6 +4,10 @@
 #include <string>
 #include "OutputMonitor.h"
 
+#define maxMsgLength 65535
+#define headerLength 20
+#define maxReadDataLength 65515                //maxMsgLength - headerLength
+
 Sniffer::Sniffer(char *filePath, OutputMonitor &outputMonitor1) :
         outputMonitor(outputMonitor1){
     file.open(filePath, std::ifstream::binary);
@@ -23,9 +27,6 @@ Sniffer::Sniffer(Sniffer &&other) : outputMonitor(outputMonitor) {
 }
 
 IPPacket Sniffer::parseFile() {
-#define maxMsgLength 65535
-#define headerLength 20
-#define maxReadDataLength maxMsgLength - headerLength
     unsigned short totalPacketLength;          //longitud total
                                                // del msj que se esta leyendo
     unsigned short msgLength;
