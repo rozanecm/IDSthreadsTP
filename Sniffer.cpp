@@ -15,8 +15,6 @@ Sniffer::Sniffer(char *filePath, OutputMonitor &outputMonitor1) :
     /* check if file was opened correctly */
     if (!file.is_open()){
         outputMonitor.cout("Error opnening file\n");
-//        Lock l(m);
-//        std::cout<<"Error opnening file\n";
     }
 
     file.seekg(0);
@@ -68,8 +66,6 @@ IPPacket Sniffer::parseFile() {
     /* leo msj */
     if (msgLength > maxReadDataLength){
         outputMonitor.cout("Error Error reading file\n");
-//        Lock l(m);
-//        std::cout<<"Error reading file\n";
     }
     file.read(msgBuffer, msgLength);
     std::string readMsg(msgBuffer, msgLength);
